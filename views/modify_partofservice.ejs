@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	</head>
+  	<body>
+    <img src="/images/toast.png"/>
+    <p>Welcome to</p>
+	<script>
+		function itemChange(obj){
+
+			var fm = document.rsForm;
+			var selectItem = obj.options[obj.options.selectedIndex].getAttribute("id");
+			console.log(selectItem)
+			var options = document.getElementById("fuckingService").options;
+			var serviceList = []
+			for(var i=0; i<options.length; i++){
+				console.log(options)
+				var temp ={}
+				temp["part"] = Number(options[i].getAttribute("name"))
+				temp["value"] = options[i].getAttribute("value")
+				temp["name"] = options[i].text
+				serviceList.push(temp)
+			}
+			console.log(serviceList)
+	
+			var changeItem = [];
+			for (var i=0; i<serviceList.length; i++){
+				console.log(serviceList[i].part)
+				if (selectItem == serviceList[i].part){
+					var temp = {}
+					temp["name"]= serviceList[i].name;
+					temp["part"]= serviceList[i].part;
+					temp["value"]= serviceList[i].value;
+					changeItem.push(temp)
+				}
+			}
+			console.log(changeItem)
+			
+			 $("#selectService").empty();
+			 for (var i=0;i<changeItem.length;i++){
+				 var option = $("<option name=" + changeItem[i].part + " value=" + changeItem[i].value + ">"+changeItem[i].name+"</option>");
+				 $('#selectService').append(option);
+			}
+	
+		}
+	</script>
+	
+	<div>
+		<h3>파트 변경</h3>
+		파트 선택
+		<select id="selectPart" name="selectPart" onchange="itemChange(this)">
+			<option value=""> Part 선택 </option>
+		 		<% for (var i=0;i<contentList.length;i++) { %>
+			<option id=<%= contentList[i].id %> value=<%= contentList[i].name %>> <%= contentList[i].name %> </option>
+			<% } %>
+		</select>
+		<br/>
+		<br/>
+		<br/>
+		서비스 선택
+		<select id="selectService" name="selectService">
+			<% for (var i=0;i<serviceList.length;i++) { %>
+			<% }%>
+		</select>
+	 
+		<select style="display:none" id="fuckingService" name="fuckingService">
+			<% for (var i=0;i<serviceList.length;i++) { %>
+			<option display:none name=<%= serviceList[i].part %> value=<%= serviceList[i].id %>&<%= serviceList[i].name %>> <%= serviceList[i].name %> </option>
+			<% }%>
+		</select>
+		<form action="/admin/modifyService" method="post">
+			<br/>
+			변경할 파트
+			<select id="selectPart" name="selectPart">
+				<option value=""> Part 선택 </option>
+				<% for (var i=0;i<contentList.length;i++) { %>
+				<option id=<%= contentList[i].id %> value=<%= contentList[i].name %>> <%= contentList[i].name %> </option>
+				<% } %>
+			</select>
+			<button type="submit" formmethod="post" onclick="viewAlert()" id="modifyService">변경</button>
+		</form>
+			
+		</div>
+	<script>
+		function viewAlert(){
+			
+			alert("Success");
+		}
+	</script>
+	<form action="/logout" method="post">
+    	<button type="submit">로그아웃</button>
+  	</form>
+  </body>
+</html>

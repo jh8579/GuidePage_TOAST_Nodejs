@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/androidstudio.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blueprint: Multi-Level Menu</title>
+	<meta name="description" content="Blueprint: A basic template for a responsive multi-level menu" />
+	<meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly" />
+	<meta name="author" content="Codrops" />
+	<!-- food icons -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/organicfoodicons.css" />
+	<!-- demo styles -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/demo.css" />
+	<!-- menu styles -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/component.css" />
+	<script src="/js/modernizr-custom.js"></script>
+	<style>
+		code[name=codeArea] {    
+			height: 500px;
+            width: 1100px;
+		}
+		.codeArea {
+            height: 500px;
+            width: 1100px;
+        }
+	</style>
+</head>
+
+<body>
+	<!-- Main container -->
+	<div class="container">
+		<!-- Blueprint header -->
+		<header class="bp-header cf" style="z-index: 2; position: relative;">
+			<div class="dummy-logo">
+				<img src="/images/logo_toast_document.svg" width="300px" height="100px" />
+				<!-- <div class="dummy-icon foodicon foodicon--coconut"></div> -->
+				<h2 class="dummy-heading"></h2>
+			</div>
+			<div class="bp-header__main">
+				<span class="bp-header__present">TOAST <span class="bp-tooltip bp-icon bp-icon--about" data-content="The Blueprints are a collection of basic and minimal website concepts, components, plugins and layouts with minimal style for easy adaption and usage, or simply for inspiration."></span></span>
+				<h1 class="bp-header__title">TOAST Document</h1>
+			</div>
+		</header>
+		<button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
+		<nav id="ml-menu" class="menu">
+			<button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
+			<div class="menu__wrap">
+				<ul data-menu="main" class="menu__level">
+
+					<% for (var i=0; i< data.length ; i++){ %>
+					<li class="menu__item"><a class="menu__link" data-submenu="part-<%= data[i].name%>" href="#">
+							<%= data[i].name%></a></li>
+					<% } %>
+				</ul>
+
+				<% for (var i=0; i< data.length ; i++){ %>
+				<!-- Submenu 1 -->
+				<ul data-menu="part-<%= data[i].name%>" class="menu__level">
+					<% for (var j=0; j< data[i].service.length ; j++){ %>
+					<li class="menu__item"><a class="menu__link" data-submenu="service-<%= data[i].service[j].name%>" href="#">
+							<%= data[i].service[j].name%></a></li>
+					<% } %>
+				</ul>
+				<% } %>
+
+				<% for (var i=0; i< data.length ; i++){ %>
+				<% for (var j=0; j< data[i].service.length ; j++){ %>
+				<!-- Submenu 1-1 -->
+				<ul data-menu="service-<%= data[i].service[j].name%>" class="menu__level">
+					<% for (var k=0; k< data[i].service[j].content.length ; k++){ %>
+					<li class="menu__item"><a class="menu__link" href="/guide/<%= data[i].name%>/<%= data[i].service[j].name%>/<%= data[i].service[j].content[k]%>">
+							<%= data[i].service[j].content[k]%></a></li>
+					<% } %>
+				</ul>
+				<% } %>
+				<% } %>
+			</div>
+		</nav>
+		<div class="content" style="z-index: 1; position: relative;">
+			<%- html_data %>
+		</div>
+	</div>
+	<!-- /view -->
+	<script src="/js/classie.js"></script>
+	<script src="/js/dummydata.js"></script>
+	<script src="/js/main.js"></script>
+	<script>
+		(function () {
+			var menuEl = document.getElementById('ml-menu'),
+				mlmenu = new MLMenu(menuEl, {
+					breadcrumbsCtrl: true, // show breadcrumbs
+					// initialBreadcrumb : 'all', // initial breadcrumb text
+					backCtrl: true, // show back button
+					// itemsDelayInterval : 60, // delay between each menu item sliding animation
+					onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
+				});
+
+			// mobile menu toggle
+			var openMenuCtrl = document.querySelector('.action--open'),
+				closeMenuCtrl = document.querySelector('.action--close');
+
+			openMenuCtrl.addEventListener('click', openMenu);
+			closeMenuCtrl.addEventListener('click', closeMenu);
+
+			function openMenu() {
+				classie.add(menuEl, 'menu--open');
+			}
+
+			function closeMenu() {
+				classie.remove(menuEl, 'menu--open');
+			}
+
+			// simulate grid content loading
+			var gridWrapper = document.querySelector('.content');
+
+			function loadDummyData(ev, itemName) {
+				//ev.preventDefault(); //이새끼가 url 바꾸는 거 막아놓음
+
+				closeMenu();
+				gridWrapper.innerHTML = '';
+				classie.add(gridWrapper, 'content--loading');
+				setTimeout(function () {
+					classie.remove(gridWrapper, 'content--loading');
+					//gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
+				}, 700);
+			}
+		})();
+	</script>
+	<script>
+		function getGithubCode(obj, codeName) {
+			var xhr = new XMLHttpRequest();
+			var url = obj.getAttribute("value");
+			var lang = obj.getAttribute("name");
+			xhr.open("GET", url);
+			xhr.send(null);
+			xhr.onload = function () {
+				if (xhr.status === 200 || xhr.status === 201) {
+					console.log(xhr.responseText);
+					// $('#codeArea').text(xhr.responseText);
+					// $('#codeArea').removeClass()
+					// $('#codeArea').addClass(lang)
+					var copyName = "temp_" + codeName
+					document.getElementById(copyName).textContent=xhr.responseText;
+					document.getElementById(codeName).textContent=xhr.responseText;
+					document.getElementById(codeName).setAttribute("class", lang)
+
+					$(document).ready(function () {
+						$('pre code').each(function (i, block) {
+							hljs.highlightBlock(block);
+						});
+					});
+				} else {
+					console.error(xhr.responseText);
+				}
+			};
+		}
+		function copyToClipboard(element) {
+			var $temp = $("<textarea>");
+			var codeName = element.getAttribute("name");
+            $("body").append($temp);
+            console.log(document.getElementById("temp_"+codeName).textContent)
+            $temp.val(document.getElementById("temp_"+codeName).textContent).select();
+            document.execCommand("copy");
+			$temp.remove();
+			alert("복사되었습니다!");
+        };
+	</script>
+</body>
+
+</html>

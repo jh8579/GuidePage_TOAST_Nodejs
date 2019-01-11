@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/androidstudio.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+    <style>
+        /* .kd-buttonbar {
+            border-bottom: 1px solid #ebebeb;
+            height: 48px;
+            overflow: visible;
+            overflow-x: visible;
+            overflow-y: visible;
+            position: relative;
+            white-space: nowrap;
+        } */
+
+        #codeArea {
+            height: 500px;
+            width: 1100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <%- html %>
+    </div>
+    <div class="button_bar">
+        <button name="java" onclick="getGithubCode(this)" value="https://cdn.jsdelivr.net/gh/jh8579/SampleCode_TOAST-Image_Java/src/serviceSampleCode/UploadAPI.java">java</button>
+        <button name="php" onclick="getGithubCode(this)" value="https://cdn.jsdelivr.net/gh/jh8579/SampleCode_TOAST-Image_PHP/uploadAPI.php">php</button>
+        <button name="python" onclick="getGithubCode(this)" value="https://cdn.jsdelivr.net/gh/jh8579/SampleCode_TOAST-Image_Python/upload_api.py">python</button>
+    </div>
+    <div class="bd-clipboard">
+        <button name="codeArea" onclick="copyToClipboard(this, 'codeArea')" data-original-title="Copy to clipboard">Copy</button>
+    </div>
+    <div>
+        <pre><code id="codeArea" class=""></code></pre>
+        <pre></pre>
+    </div>
+
+    <script>
+        function copyToClipboard(element, codeName) {
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            console.log(document.getElementById("temp_"+codeName).textContent)
+            $temp.val(document.getElementById("temp_"+codeName).textContent).select();
+            document.execCommand("copy");
+            $temp.remove();
+        };
+
+        function getGithubCode(obj) {
+            var xhr = new XMLHttpRequest();
+            var url = obj.getAttribute("value");
+            var lang = obj.getAttribute("name");
+            xhr.open("GET", url);
+            xhr.send(null);
+            xhr.onload = function () {
+                if (xhr.status === 200 || xhr.status === 201) {
+                    console.log(xhr.responseText);
+                    $('#codeArea').text(xhr.responseText);
+                    $('#temp_codeArea').text(xhr.responseText);
+                    $('#codeArea').removeClass()
+                    $('#codeArea').addClass(lang)
+                    $(document).ready(function () {
+                        $('pre code').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                    });
+                } else {
+                    console.error(xhr.responseText);
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

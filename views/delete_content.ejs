@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blueprint: Multi-Level Menu</title>
+	<meta name="description" content="Blueprint: A basic template for a responsive multi-level menu" />
+	<meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly" />
+	<meta name="author" content="Codrops" />
+	<!-- food icons -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/organicfoodicons.css" />
+	<!-- demo styles -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/demo.css" />
+	<!-- menu styles -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/component.css" />
+	<script src="/js/modernizr-custom.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+	<style rel="stylesheet">
+		.CodeMirror,
+		.CodeMirror-scroll {
+			max-height: 500px;
+		}
+	</style>
+</head>
+
+<body>
+<!-- Main container -->
+<div class="container">
+	<!-- Blueprint header -->
+	<header class="bp-header cf" style="z-index: 2; position: relative;">
+		<div class="dummy-logo">
+			<img src="/images/logo_toast_document.svg" width="300px" height="100px"/>
+			<!-- <div class="dummy-icon foodicon foodicon--coconut"></div> -->
+			<h2 class="dummy-heading"></h2>
+		</div>
+		<div class="bp-header__main">
+			<span class="bp-header__present"><form action="/logout" method="post"><button type="submit">로그아웃</button></form>
+				<span class="bp-tooltip bp-icon bp-icon--about" data-content="The Blueprints are a collection of basic and minimal website concepts, components, plugins and layouts with minimal style for easy adaption and usage, or simply for inspiration."></span></span>
+			<h1 class="bp-header__title">TOAST Document</h1>
+
+		</div>
+	</header>
+	<button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
+	<nav id="ml-menu" class="menu">
+		<button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
+		<div class="menu__wrap">
+			<ul data-menu="main" class="menu__level">
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/addPS'"  href="#">타입 및 서비스 추가</a></li>
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/modifyPS'"  href="#">타입 및 서비스 수정</a></li>
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/deletePS'"  href="#">타입 및 서비스 삭제</a></li>
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/addContent'"  href="#">콘텐츠 추가</a></li>
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/modifyContent'"  href="#">콘텐츠 수정</a></li>
+				<li class="menu__item"><a class="menu__link" onclick="location.href='/admin/deleteContent'"  href="#">콘텐츠 삭제</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="content"  style="z-index: 1; position: relative;">
+		<h3>콘텐츠 삭제</h3>
+		<form action="/admin/deleteContent" method="post" ENCTYPE="multipart/form-data">
+			파트 선택
+			<select id="selectPart" name="selectPart" onchange="itemChange(this)">
+				<option value=""> 파트 선택 </option>
+				<% for (var i=0;i<contentList.length;i++) { %>
+					<option id=<%= contentList[i].id %> value=<%= contentList[i].name %>> <%= contentList[i].name %> </option>
+				<% } %>
+			</select>
+			<br/>
+			<br/>
+			<br/>
+			서비스 선택
+			<select id="selectService" name="selectService" onclick="contentChange(this)">
+				<option>서비스 선택</option>
+				<% for (var i=0;i<serviceList.length;i++) { %>
+				<% }%>
+			</select>
+			<select style="display:none" id="tempService" name="tempService">
+				<% for (var i=0;i<serviceList.length;i++) { %>
+					<option display:none name=<%= serviceList[i].part %> value=<%= serviceList[i].id %>&<%= serviceList[i].name %>> <%= serviceList[i].name %> </option>
+				<% }%>
+			</select>
+			<br/>
+			<br/>
+			<br/>
+			콘텐츠 선택
+			<select id="selectContent" name="selectContent">
+				<option>콘텐츠 선택</option>
+				<% for (var i=0;i<docList.length;i++) { %>
+				<% }%>
+			</select>
+			<select style="display:none" id="tempContent" name="tempContent">
+				<% for (var i=0;i<docList.length;i++) { %>
+					<option display:none name=<%= docList[i].service %> value=<%= docList[i].id %>&<%= docList[i].name %>> <%= docList[i].name %> </option>
+				<% }%>
+			</select>
+			<br/>
+			<br/>
+			<br/>
+			<button type="submit" formmethod="post" onclick="viewAlert()">삭제</button>
+		</form>
+	</div>
+	<script>
+		function itemChange(obj){
+			var selectItem = obj.options[obj.options.selectedIndex].getAttribute("id");
+			console.log(selectItem)
+
+			var options = document.getElementById("tempService").options;
+			var serviceList = []
+			for(var i=0; i<options.length; i++){
+				console.log(options)
+				var temp ={}
+				temp["part"] = Number(options[i].getAttribute("name"))
+				temp["value"] = options[i].getAttribute("value")
+				temp["name"] = options[i].text
+				serviceList.push(temp)
+			}
+			console.log(serviceList)
+
+			var changeItem = [];
+			for (var i=0; i<serviceList.length; i++){
+				console.log(serviceList[i].part)
+				if (selectItem == serviceList[i].part){
+					var temp = {}
+					temp["name"]= serviceList[i].name;
+					temp["part"]= serviceList[i].part;
+					temp["value"]= serviceList[i].value;
+					changeItem.push(temp)
+				}
+			}
+			console.log(changeItem)
+
+			$("#selectService").empty();
+			var option = $("<option value=''> 서비스 선택 </option>")
+
+			$('#selectService').append(option);
+			for (var i=0;i<changeItem.length;i++){
+				var option = $("<option name=" + changeItem[i].part + " value=" + changeItem[i].value + ">"+changeItem[i].name+"</option>");
+				$('#selectService').append(option);
+			}
+
+		}
+
+		function contentChange(obj){
+			var selectItem = obj.options[obj.options.selectedIndex].getAttribute("value");
+			selectItem = selectItem.split('&')
+			selectItem = selectItem[0]
+			console.log("selectItem: "+selectItem)
+
+			var options = document.getElementById("tempContent").options;
+			var contentList = []
+			console.log(options)
+			for(var i=0; i<options.length; i++){
+//					console.log(options)
+				var temp ={}
+				temp["service"] = Number(options[i].getAttribute("name"))
+				temp["value"] = options[i].getAttribute("value")
+				temp["name"] = options[i].text
+				contentList.push(temp)
+			}
+			console.log("docList: "+contentList[0].service)
+
+			var changeItem = [];
+			for (var i=0; i<contentList.length; i++){
+//					console.log(contentList[i].part)
+				if (selectItem == contentList[i].service){
+					var temp = {}
+					temp["name"]= contentList[i].name;
+					temp["service"]= contentList[i].service;
+					temp["value"]= contentList[i].value;
+					changeItem.push(temp)
+				}
+			}
+//				console.log(changeItem)
+			$("#selectContent").empty();
+			var option = $("<option value=''> 콘텐츠 선택 </option>")
+
+			$('#selectContent').append(option);
+			for (var i=0;i<changeItem.length;i++){
+				var option = $("<option name=" + changeItem[i].service + " value=" + changeItem[i].value + ">"+changeItem[i].name+"</option>");
+				$('#selectContent').append(option);
+			}
+
+		}
+	</script>
+</div>
+
+<!-- /view -->
+<script src="/js/classie.js"></script>
+<script src="/js/dummydata.js"></script>
+<script src="/js/main.js"></script>
+<script>
+	(function() {
+		var menuEl = document.getElementById('ml-menu'),
+				mlmenu = new MLMenu(menuEl, {
+					breadcrumbsCtrl : true, // show breadcrumbs
+					// initialBreadcrumb : 'all', // initial breadcrumb text
+					backCtrl : true, // show back button
+					// itemsDelayInterval : 60, // delay between each menu item sliding animation
+					onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
+				});
+
+		// mobile menu toggle
+		var openMenuCtrl = document.querySelector('.action--open'),
+				closeMenuCtrl = document.querySelector('.action--close');
+
+		openMenuCtrl.addEventListener('click', openMenu);
+		closeMenuCtrl.addEventListener('click', closeMenu);
+
+		function openMenu() {
+			classie.add(menuEl, 'menu--open');
+		}
+
+		function closeMenu() {
+			classie.remove(menuEl, 'menu--open');
+		}
+
+		// simulate grid content loading
+		var gridWrapper = document.querySelector('.content');
+
+		function loadDummyData(ev, itemName) {
+			//ev.preventDefault(); //이새끼가 url 바꾸는 거 막아놓음
+
+			closeMenu();
+			gridWrapper.innerHTML = '';
+			classie.add(gridWrapper, 'content--loading');
+			setTimeout(function() {
+				classie.remove(gridWrapper, 'content--loading');
+				//gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
+			}, 700);
+		}
+	})();
+</script>
+</body>
+</html>
