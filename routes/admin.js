@@ -1,6 +1,7 @@
 var express = require('express');
 
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 var multer = require('multer');
 var memoryStorage = multer.memoryStorage();
@@ -349,8 +350,10 @@ router.post('/addContent', formData.array('file'), function (req, res, next) {
     console.log(md_filepath)
     console.log(ejs_filepath)
 
-    fs.mkdir(path, { recursive: true }, (err) => {
-        if (err) throw err;
+    mkdirp(path, { recursive: true }, (err) => {
+        if(err){
+            console.log(err);
+        }
         fs.writeFile(md_filepath, text, function (err) {
             if (err) {
                 console.log(err);
@@ -464,7 +467,7 @@ router.post('/modifyContent', formData.array('file'), function (req, res, next) 
     console.log(md_filepath)
     console.log(ejs_filepath)
 
-    fs.mkdir(path, { recursive: true }, (err) => {
+    mkdirp(path, { recursive: true }, (err) => {
         if (err) throw err;
         fs.writeFile(md_filepath, text, function (err) {
             if (err) {
