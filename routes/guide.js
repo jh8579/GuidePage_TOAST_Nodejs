@@ -53,8 +53,9 @@ router.get('/:part/:service/:content', function (req, res, next) {
         temp_service["content"] = []
 
         for(var j=0; j<results[2].length; j++){
-          if(results[2][j].service == temp_service["id"])
-          temp_service["content"].push(results[2][j].name)
+          if(results[2][j].service == temp_service["id"]){
+            temp_service["content"].push(results[2][j].name)
+          }
         }
         service_list.push(temp_service)
       }
@@ -66,7 +67,7 @@ router.get('/:part/:service/:content', function (req, res, next) {
           }
         }
       }
-      console.log(data[0]);
+      console.log(data[7]["service"]);
       res.render('menu', { "data" : data, "html_data" : html_data})
     }
   })

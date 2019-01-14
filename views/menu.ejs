@@ -65,7 +65,7 @@
 				<!-- Submenu 1 -->
 				<ul data-menu="part-<%= data[i].name%>" class="menu__level">
 					<% for (var j=0; j< data[i].service.length ; j++){ %>
-					<li class="menu__item"><a class="menu__link" data-submenu="service-<%= data[i].service[j].name%>" href="#">
+					<li class="menu__item"><a class="menu__link" data-submenu="service-<%= data[i].service[j].id%>" href="#">
 							<%= data[i].service[j].name%></a></li>
 					<% } %>
 				</ul>
@@ -74,7 +74,7 @@
 				<% for (var i=0; i< data.length ; i++){ %>
 				<% for (var j=0; j< data[i].service.length ; j++){ %>
 				<!-- Submenu 1-1 -->
-				<ul data-menu="service-<%= data[i].service[j].name%>" class="menu__level">
+				<ul data-menu="service-<%= data[i].service[j].id%>" class="menu__level">
 					<% for (var k=0; k< data[i].service[j].content.length ; k++){ %>
 					<li class="menu__item"><a class="menu__link" href="/guide/<%= data[i].name%>/<%= data[i].service[j].name%>/<%= data[i].service[j].content[k]%>">
 							<%= data[i].service[j].content[k]%></a></li>
