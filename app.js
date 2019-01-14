@@ -28,6 +28,34 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(methodOverride('_method'));
 
+const winston = require('winston');
+const fs = require('fs');
+const logDir = './log'; 
+if (!fs.existsSync(logDir)) {
+   fs.mkdirSync(logDir); 
+} 
+const tsFormat = () => (new Date()).toLocaleTimeString(); 
+const logger1 = winston.createLogger({
+   transports: [
+      new (winston.transports.Console)({ timestamp: tsFormat, level: 'info' }),
+      new (winston.transports.File)({
+         level: 'info', 
+         filename: `${logDir}/logs.log`, 
+         timestamp: tsFormat, maxsize:1000000, 
+         maxFiles:5 
+        }
+        ) 
+      ] 
+});
+
+logger1.stream = {
+  write: function(message, encoding){
+      logger1.info(message);
+  }
+};
+
+app.use(require("morgan")("combined", { "stream": logger1.stream }));
+
 app.use('/', indexRouter);
 app.use('/guide', guideRouter);
 app.use('/users', usersRouter);
