@@ -23,14 +23,56 @@
 	<link rel="stylesheet" type="text/css" href="/stylesheets/component.css" />
 	<script src="/js/modernizr-custom.js"></script>
 	<style>
-		code[name=codeArea] {    
+		code[name=codeArea] {
 			height: 500px;
-            width: 1100px;
+			width: 1100px;
 		}
+
 		.codeArea {
-            height: 500px;
-            width: 1100px;
-        }
+			height: 500px;
+			width: 1100px;
+		}
+
+		table {
+			width: 100%;
+			border-top: 1px solid #444444;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			border-bottom: 1px solid #444444;
+			padding: 10px;
+		}
+
+		th {
+			background-color: #bbdefb;
+		}
+
+		td {
+			background-color: #e3f2fd;
+		}
+
+		button {
+
+			background-color: #87CEEB;
+
+			-webkit-transition-duration: 0.4s;
+
+			transition-duration: 0.4s;
+
+		}
+
+		.btn1:hover,
+		.btn2:hover,
+		.btn3:hover,
+		.btn4:hover {
+
+			background-color: #4169E1;
+
+			color: white;
+
+		}
 	</style>
 </head>
 
@@ -148,8 +190,8 @@
 					// $('#codeArea').removeClass()
 					// $('#codeArea').addClass(lang)
 					var copyName = "temp_" + codeName
-					document.getElementById(copyName).textContent=xhr.responseText;
-					document.getElementById(codeName).textContent=xhr.responseText;
+					document.getElementById(copyName).textContent = xhr.responseText;
+					document.getElementById(codeName).textContent = xhr.responseText;
 					document.getElementById(codeName).setAttribute("class", lang)
 
 					$(document).ready(function () {
@@ -165,13 +207,13 @@
 		function copyToClipboard(element) {
 			var $temp = $("<textarea>");
 			var codeName = element.getAttribute("name");
-            $("body").append($temp);
-            console.log(document.getElementById("temp_"+codeName).textContent)
-            $temp.val(document.getElementById("temp_"+codeName).textContent).select();
-            document.execCommand("copy");
+			$("body").append($temp);
+			console.log(document.getElementById("temp_" + codeName).textContent)
+			$temp.val(document.getElementById("temp_" + codeName).textContent).select();
+			document.execCommand("copy");
 			$temp.remove();
 			alert("복사되었습니다!");
-        };
+		};
 	</script>
 </body>
 
