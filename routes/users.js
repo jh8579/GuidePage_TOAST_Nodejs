@@ -18,7 +18,7 @@ router.get('/login', formData.array('file'), function(req, res, next) {
 });
 
 // 로그인 수행
-router.post('/login', formData.array('file'), function(req, res, next) {
+router.post('/login', function(req, res, next) {
   var email = req.body.username;
   var password = req.body.password;
   

@@ -67,7 +67,6 @@ router.get('/:part/:service/:content', function (req, res, next) {
           }
         }
       }
-      console.log(data[7]["service"]);
       res.render('menu', { "data" : data, "html_data" : html_data})
     }
   })
