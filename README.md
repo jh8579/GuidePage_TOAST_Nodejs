@@ -109,6 +109,51 @@ $sudo ./configure --with-http_ssl_module --with-debug --with-http_realip_module 
 
 ### ```TOAST RDS for MySQL 선택!```
 
+### users Table
+
+|  | type | 내용 |
+| :---: | :---: | :---: |
+| id | int | User ID |
+| type | char | User 타입(admin, client) |
+| email | char | User ID, email |
+| password | char | User password |
+| name | char | User 이름 |
+| phone | char | User 휴대폰번호 |
+| code | char | 비밀번호 찾기시 참조할 코드 |
+
+### parts Table
+
+| col | type | 내용 |
+| :---: | :---: | :---: |
+| id | int | Part ID |
+| name | char | Part 이름 |
+
+### services Table
+
+| col | type | 내용 |
+| :---: | :---: | :---: |
+| id | int | Service ID |
+| name | char | Service 이름 |
+| part | int | 해당 서비스가 속해 있는 Part ID(Foriegn Key 지정) |
+
+### contents Table
+
+| col | type | 내용 |
+| :---: | :---: | :---: |
+| id | int | Content가 ID |
+| name | char | Content가 이름 |
+| service | int | 해당 Content가 속해 있는 Service ID(Foriegn Key 지정) |
+
+### sessions Table
+
+* Nodejs 연동시 자동 생성
+
+| col | type | 내용 |
+| :---: | :---: | :---: |
+| session_id | char | 세션 ID |
+| expires | int | 세션 만료 시간 |
+| data | text | 세션 Data |
+
 ## Markdown HTML 변환 모듈
 
 ### Read the Docs - MkDocs
